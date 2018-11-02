@@ -1,0 +1,33 @@
+﻿@model Shop.Models.Product
+
+@{
+    ViewData["Title"] = "Удаление";
+}
+
+<h2>Удаление продукта</h2>
+
+<h3>ВЫ уверены, что хотите удалить продукт?</h3>
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Наименование
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            Цена
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-default" /> |
+        <a asp-action="Index">Вернуться к списку</a>
+    </form>
+</div>
