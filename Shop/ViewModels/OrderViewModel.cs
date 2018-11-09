@@ -12,6 +12,8 @@ namespace Shop.ViewModels
         public decimal TotalSum => Items.Sum(x => x.TotalSum);
 
         public List<OrderItemViewModel> Items { get; set; }
+
+        public bool IsItPaid { get; set; }
     }
 
     public class OrderItemViewModel
@@ -21,5 +23,6 @@ namespace Shop.ViewModels
         public string ProductName { get; set; }
         public int Count { get; set; }
         public decimal ProductPrice { get; set; }
+        
     }
 }

@@ -42,5 +42,22 @@ namespace Shop.Controllers
 
             return View(ordersViewModel);
         }
+        // GET: Orders/Finalize/5
+        //public async Task<IActionResult> Finalize(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var order = await _db.OrderItems
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (order == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(order);
+        //}
     }
 }
