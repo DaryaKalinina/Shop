@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Shop.ViewModels.OrderViewModel>
+
+@{
+    var title = "Заказы";
+    ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+
+@foreach (var order in Model)
+{
+    <div class="md-t-1">
+        <h3>Номер заказа: @order.Number</h3>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Название продукта</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Итог</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in order.Items)
+                {
+                    <tr>
+                        <td>@item.ProductName</td>
+                        <td>@item.ProductPrice</td>
+                        <td>@item.Count</td>
+                        <td>@item.TotalSum</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3>Стоимость заказа: @order.TotalSum</h3>
+
+    </div>
+}
