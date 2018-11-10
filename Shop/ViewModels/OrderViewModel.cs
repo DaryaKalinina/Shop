@@ -14,6 +14,7 @@ namespace Shop.ViewModels
         public List<OrderItemViewModel> Items { get; set; }
 
         public bool IsItPaid { get; set; }
+        
     }
 
     public class OrderItemViewModel

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shop.Data;
+using Shop.Models;
 using Shop.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -38,26 +39,67 @@ namespace Shop.Controllers
                             ProductPrice = item.Product.Price,
                             Count = item.Count
                         }).ToList()
+                    
                 });
 
             return View(ordersViewModel);
         }
-        // GET: Orders/Finalize/5
-        //public async Task<IActionResult> Finalize(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Orders/Pay/5
+        // GET: GiftCards/Edit/5
+        public async Task<IActionResult> Pay(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var order = await _db.OrderItems
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var order = await _db.OrderItems.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return View(order);
+        }
 
-        //    return View(order);
-        //}
+        // POST: Orders/Pay/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pay(int id, [Bind("Id,Product ,Oder ,Count,IsItPaid")] OrderItem order)
+        {
+            if (id != order.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _db.Update(order);
+                    await _db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!OrderEists(order.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(order);
+        }
+
+        private bool OrderEists(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
