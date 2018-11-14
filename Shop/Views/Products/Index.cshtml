@@ -3,40 +3,79 @@
 @{
     ViewData["Title"] = "Список продукции";
 }
+@section scripts {
+    <script>
+        function addToCart(productId) {
 
-<h2>Список продукции</h2>
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "products/" + productId + "/addToCart", true);
+            alert("button_" + productId);
+            xhr.send();
 
-<p>
-    <a href="/products/add" >Добавить новый</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Наименование
-            </th>
-            <th>
-                Цена
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var product in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => product.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => product.Price)
-            </td>
-            <td>
-                <a href="products/@(product.Id)/addToCart" class="btn btn-info">Заказать</a> |
-                <a href="products/edit/@(product.Id)" class="btn btn-default">Редактировать</a>|
-                <a asp-action="Details" asp-route-id="@product.Id">Подробно</a> |
-                <a asp-action="Delete" asp-route-id="@product.Id">Удалить</a>
-            </td>
-        </tr>
+                var $button = document.getElementById("button_" + productId);
+                $button.style.display = 'none';
+                alert('good')
+                    
+
+                }
+            
+    </script>
 }
-    </tbody>
-</table>
+<div class="wrapper">
+    <div class="title">
+        <h2>Список продукции</h2>
+    </div>
+    <div class="new_product">
+        <p>
+            <a href="/products/add" class="btn btn-primary">Добавить новый</a>
+        </p>
+    </div>
+    <div class="view_product">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Наименование
+                    </th>
+                    <th>
+                        Цена
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => product.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => product.Price)
+                        </td>
+                        <td>
+                            
+                            <button id="button_@(product.Id)" data-toggle="modal" data-target="#goToCart" onclick="addToCart(@(product.Id))" class="btn btn-success">В корзину</button>
+                            <div class="modal fade" id="goToCart">
+                                Перейти в корзину
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">                                            
+                                            <button class="close" data-dismiss="modal">x</button>
+                                            <h3 class="modal-title">Товар успешно добавлен в корзину!</h3>
+                                        </div>
+                                        <div class="modal-body">https://localhost:44368/Home/About</div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<button id="button_@(product.Id)" onclick="addToCart(@(product.Id))" class="btn btn-success">В корзину</button>*@
+                            <a href="products/@(product.Id)/addToCart" class="btn btn-success">Добавить в корзину</a>
+                            <a href="products/edit/@(product.Id)" class="btn btn-info">Редактировать</a>
+                            <a href="products/delete/@(product.Id)" class="btn btn-danger">Удалить</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

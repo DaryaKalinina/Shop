@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Shop.ViewModels.OrderViewModel>
 
 @{
-    var title = "Заказы";
+    var title = "История заказов";
     ViewData["Title"] = title;
 }
 @section scripts {
@@ -21,6 +21,7 @@
                     $button.style.display = 'none';
                     var $orderStatusLabel = document.getElementById("order_status_" + orderId);
                     $orderStatusLabel.textContent = "Оплаченный";
+
                 }
             };
         }

@@ -26,6 +26,7 @@ namespace Shop.Controllers
             var orders = await _db.Orders
                 .Include(x => x.Items)
                 .ThenInclude(x => x.Product)
+                .OrderByDescending(x => x.Number)
                 .ToListAsync();
 
             var ordersViewModel = orders
@@ -41,13 +42,11 @@ namespace Shop.Controllers
                             ProductPrice = item.Product.Price,
                             Count = item.Count
                         }).ToList()
-                    
                 });
 
             return View(ordersViewModel);
         }
-        // GET: Orders/Pay/5
-        // GET: GiftCards/Edit/5
+
         [HttpGet]
         [Route("{orderId:int}/payed")]
         public async Task<ActionResult<bool>> Payed(int orderId)

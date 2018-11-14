@@ -22,7 +22,7 @@ namespace Shop.Models
 
         private string GenerateNumber()
         {
-            return $"{DateTime.Now.ToString("yyyyMMdd-HHmmss")}";
+            return $"{DateTime.Now.ToString("yyyy.MM.dd-HH.mm.ss")}";
         }
 
     }
