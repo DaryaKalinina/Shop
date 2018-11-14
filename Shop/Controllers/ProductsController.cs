@@ -12,17 +12,17 @@ namespace Shop.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly ShopContext _context;
+        public ShopContext _db;
 
-        public ProductsController(ShopContext context)
+        public ProductsController(ShopContext db)
         {
-            _context = context;
+            _db = db;
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Products.ToListAsync());
+            return View(await _db.Products.ToListAsync());
         }
 
         // GET: Products/Details/5
@@ -33,7 +33,7 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _db.Products
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -58,8 +58,8 @@ namespace Shop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                _db.Add(product);
+                await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -73,7 +73,7 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _db.Products.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -97,8 +97,8 @@ namespace Shop.Controllers
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    _db.Update(product);
+                    await _db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,7 +124,7 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
+            var product = await _db.Products
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -133,21 +133,58 @@ namespace Shop.Controllers
 
             return View(product);
         }
+        [HttpGet]
+        [Route("{productId:int}/addToCart")]
+        public async Task<IActionResult> AddToCart(int productId)
+        {
+            var order = await _db.Orders
+                .Include(x => x.Items)
+                .ThenInclude(x => x.Product)
+                .FirstOrDefaultAsync(x => x.IsItPayed == false);
+
+            if (order == null)
+            {
+                order = new Order();
+                _db.Orders.Add(order);
+                await _db.SaveChangesAsync();
+            }
+
+            var orderItem = order.Items.FirstOrDefault(x => x.ProductId == productId);
+
+            if (orderItem == null)
+            {
+                orderItem = new OrderItem
+                {
+                    ProductId = productId,
+                    OrderId = order.Id,
+                    Count = 1
+                };
+
+                _db.OrderItems.Add(orderItem);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            orderItem.Count++;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
 
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            var product = await _db.Products.FindAsync(id);
+            _db.Products.Remove(product);
+            await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return _db.Products.Any(e => e.Id == id);
         }
     }
 }

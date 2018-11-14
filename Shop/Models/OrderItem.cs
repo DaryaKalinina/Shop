@@ -7,7 +7,7 @@ namespace Shop.Models
 {
     public class OrderItem
     {
-        private OrderItem()
+        public OrderItem()
         { }
 
         public OrderItem(Product product, int count)
@@ -22,6 +22,6 @@ namespace Shop.Models
         public int OrderId { get; set; }
         public Order Order { get; set; }
         public int Count { get; set; }
-        public bool IsItPaid { get; set; }
+       // public bool IsItPaid { get; set; }
     }
 }

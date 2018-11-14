@@ -7,6 +7,8 @@ namespace Shop.ViewModels
 {
     public class OrderViewModel
     {
+        public int Id { get; set; }
+
         public string Number { get; set; }
 
         public decimal TotalSum => Items.Sum(x => x.TotalSum);

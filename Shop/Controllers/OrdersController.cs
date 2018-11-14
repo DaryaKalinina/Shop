@@ -31,7 +31,9 @@ namespace Shop.Controllers
             var ordersViewModel = orders
                 .Select(order => new OrderViewModel
                 {
+                    Id = order.Id,
                     Number = order.Number,
+                    IsItPaid = order.IsItPayed,
                     Items = order.Items
                         .Select(item => new OrderItemViewModel
                         {
@@ -46,60 +48,19 @@ namespace Shop.Controllers
         }
         // GET: Orders/Pay/5
         // GET: GiftCards/Edit/5
-        public async Task<IActionResult> Pay(int? id)
+        [HttpGet]
+        [Route("{orderId:int}/payed")]
+        public async Task<ActionResult<bool>> Payed(int orderId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var order = await _db.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
 
-            var order = await _db.OrderItems.FindAsync(id);
             if (order == null)
-            {
-                return NotFound();
-            }
-            return View(order);
-        }
+                return false;
 
-        // POST: Orders/Pay/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Pay(int id, [Bind("Id,Product ,Oder ,Count,IsItPaid")] OrderItem order)
-        {
-            if (id != order.Id)
-            {
-                return NotFound();
-            }
+            order.IsItPayed = true;
+            await _db.SaveChangesAsync();
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _db.Update(order);
-                    await _db.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderEists(order.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(order);
-        }
-
-        private bool OrderEists(int id)
-        {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

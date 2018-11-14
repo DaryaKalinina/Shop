@@ -16,6 +16,8 @@ namespace Shop.Models
         public int Id { get; set; }
         public string Number { get; set; }
         public List<OrderItem> Items { get; set; }
+        public bool IsItPayed { get; set; }
+
         //public Discount Discount { get; set; }
 
         private string GenerateNumber()
