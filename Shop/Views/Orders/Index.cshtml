@@ -4,29 +4,7 @@
     var title = "История заказов";
     ViewData["Title"] = title;
 }
-@section scripts {
-    <script>
-        function orderPayed(orderId) {
 
-            var xhr = new XMLHttpRequest();
-
-            xhr.open("GET", "orders/" + orderId + "/payed", true);
-
-            xhr.send();
-
-            xhr.onload = function () {
-                console.log(xhr.response);
-                if (JSON.parse(xhr.response)) {
-                    var $button = document.getElementById("button_" + orderId);
-                    $button.style.display = 'none';
-                    var $orderStatusLabel = document.getElementById("order_status_" + orderId);
-                    $orderStatusLabel.textContent = "Оплаченный";
-
-                }
-            };
-        }
-    </script>
-}
 <h2>@title</h2>
 
 @foreach (var order in Model)
@@ -61,10 +39,7 @@
     </table>
 
     <h3>Стоимость заказа: @order.TotalSum </h3>
-    @if (order.IsItPaid == false)
-    {
-        <button id="button_@(order.Id)" onclick="orderPayed(@(order.Id))" class="btn btn-success">Оплатить заказ</button>
-    }
+  
 
 
 </div>

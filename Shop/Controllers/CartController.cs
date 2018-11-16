@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Shop.Controllers
 {
-    [Route("orders")]
-    public class OrdersController : Controller
+    [Route("cart")]
+    public class CartController : Controller
     {
         public ShopContext _db;
 
-        public OrdersController(ShopContext db)
+        public CartController(ShopContext db)
         {
             _db = db;
         }
@@ -26,7 +26,7 @@ namespace Shop.Controllers
             var orders = await _db.Orders
                 .Include(x => x.Items)
                 .ThenInclude(x => x.Product)
-                .OrderByDescending(x => x.Number)
+                .Where(x => x.IsItPayed == false)
                 .ToListAsync();
 
             var ordersViewModel = orders
@@ -46,6 +46,19 @@ namespace Shop.Controllers
 
             return View(ordersViewModel);
         }
-       
+        [HttpGet]
+        [Route("{orderId:int}/payed")]
+        public async Task<ActionResult<bool>> Payed(int orderId)
+        {
+            var order = await _db.Orders.FirstOrDefaultAsync(x => x.Id == orderId);
+
+            if (order == null)
+                return false;
+
+            order.IsItPayed = true;
+            await _db.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

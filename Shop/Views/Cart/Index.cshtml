@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Shop.ViewModels.OrderViewModel>
+
+@{
+    var title = "Корзина";
+    ViewData["Title"] = title;
+}
+
+<h2>@title</h2>
+@section scripts {
+    <script>
+        function orderPayed(orderId) {
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open("GET", "cart/" + orderId + "/payed", true);
+
+            xhr.send();
+
+            xhr.onload = function () {
+                console.log(xhr.response);
+                if (JSON.parse(xhr.response)) {
+                    var $button = document.getElementById("button_" + orderId);
+                    $button.style.display = 'none';
+                    var $orderStatusLabel = document.getElementById("order_status_" + orderId);
+                    $orderStatusLabel.textContent = "Оплаченный";
+
+                }
+            };
+        }
+    </script>
+}
+<div class="modal fade" id="goHome">
+    
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">x</button>
+                <h3 class="modal-title">Заказ успешно оплачен!</h3>
+            </div>
+            <div class="modal-body">Вернуться на главную страницу?</div>
+            <div class="modal-footer">
+
+                <button class="btn btn-success" onclick="location.href='home'">На главную</button>
+            </div>
+        </div>
+    </div>
+</div>
+@foreach (var order in Model) 
+  
+    {
+    <div class="md-t-1">
+
+        <h3>Номер заказа: @order.Number</h3>
+        <h4>Статус заказа  <span id="order_status_@(order.Id)">@(order.IsItPaid == false ? "Не оплаченный" : "Оплаченный")</span></h4>
+
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Название продукта</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Итог</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in order.Items)
+
+                {
+
+                    <tr>
+                        <td>@item.ProductName</td>
+                        <td>@item.ProductPrice</td>
+                        <td>@item.Count</td>
+                        <td>@item.TotalSum</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3>Стоимость заказа: @order.TotalSum </h3>
+        
+        @if (order.IsItPaid == false)
+        {
+
+            <button id="button_@(order.Id)" onclick="orderPayed(@(order.Id))" data-toggle="modal" data-target="#goHome" class="btn btn-success">Оплатить заказ</button>
+        }
+
+
+    </div>
+    
+}

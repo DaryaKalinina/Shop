@@ -9,18 +9,29 @@
 
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "products/" + productId + "/addToCart", true);
-            alert("button_" + productId);
             xhr.send();
 
-                var $button = document.getElementById("button_" + productId);
-                $button.style.display = 'none';
-                alert('good')
-                    
+        }
 
-                }
-            
     </script>
 }
+<div class="modal fade" id="goToCart">
+        Перейти в корзину
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">x</button>
+                    <h3 class="modal-title">Товар успешно добавлен в корзину!</h3>
+                </div>
+                <div class="modal-body">Перейти в корзину или продолжить покупки?</div>
+                <div class="modal-footer">
+
+                    <button class="btn btn-success" onclick="location.href='cart'">Перейти в корзину</button>
+                    <button class="btn btn-default" data-dismiss="modal">Продолжить покупки</button>
+                </div>
+            </div>
+        </div>
+ </div>
 <div class="wrapper">
     <div class="title">
         <h2>Список продукции</h2>
@@ -54,24 +65,12 @@
                             @Html.DisplayFor(modelItem => product.Price)
                         </td>
                         <td>
-                            
-                            <button id="button_@(product.Id)" data-toggle="modal" data-target="#goToCart" onclick="addToCart(@(product.Id))" class="btn btn-success">В корзину</button>
-                            <div class="modal fade" id="goToCart">
-                                Перейти в корзину
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">                                            
-                                            <button class="close" data-dismiss="modal">x</button>
-                                            <h3 class="modal-title">Товар успешно добавлен в корзину!</h3>
-                                        </div>
-                                        <div class="modal-body">https://localhost:44368/Home/About</div>
-                                    </div>
-                                </div>
-                            </div>
+
+                            <button id="button_@(product.Id)" data-toggle="modal" data-target="#goToCart" onclick="addToCart(@(product.Id))" class="btn btn-success">Добавить в корзину</button>
                             @*<button id="button_@(product.Id)" onclick="addToCart(@(product.Id))" class="btn btn-success">В корзину</button>*@
-                            <a href="products/@(product.Id)/addToCart" class="btn btn-success">Добавить в корзину</a>
-                            <a href="products/edit/@(product.Id)" class="btn btn-info">Редактировать</a>
-                            <a href="products/delete/@(product.Id)" class="btn btn-danger">Удалить</a>
+                            @*<a href="products/@(product.Id)/addToCart" class="btn btn-success" data-toggle="modal" data-target="#goToCart">Добавить в корзину</a>*@
+                            @*<a href="products/edit/@(product.Id)" class="btn btn-info">Редактировать</a>*@
+                            @*<a href="products/delete/@(product.Id)" class="btn btn-danger">Удалить</a>*@
                         </td>
                     </tr>
                 }
